@@ -1,0 +1,22 @@
+version: '3.5'
+
+networks:
+  decs:
+    name: decs
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/24
+
+services:
+  stan:
+    image: nats-streaming
+    container_name: decs-stan
+    networks:
+      - decs
+    ports:
+      - "4222:4222"
+#      - "8222:8222"
+#      - "6222:6222"
+    command: "-cid decs"

@@ -1,0 +1,40 @@
+version: '3.5'
+
+networks:
+  decs:
+    name: decs
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/24
+
+services:
+  nsqlookupd:
+    image: nsqio/nsq:v1.1.0
+    container_name: decs-nsqlookupd
+    networks:
+      - decs
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+    command: /nsqlookupd -log-level error
+
+  nsqd:
+    image: nsqio/nsq:v1.1.0
+    container_name: decs-nsqd
+    networks:
+      - decs
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+    command: /nsqd -log-level error -lookupd-tcp-address=nsqlookupd:4160 -broadcast-address=10.10.10.1
+
+#  nsqadmin:
+#    image: nsqio/nsq:v1.1.0
+#    container_name: decs-nsqadmin
+#    networks:
+#      - decs
+#    command: /nsqadmin -log-level error -lookupd-http-address=nsqlookupd:4161
+#    ports:
+#      - "4171:4171"

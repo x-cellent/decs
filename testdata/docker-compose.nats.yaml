@@ -1,0 +1,21 @@
+version: '3.5'
+
+networks:
+  decs:
+    name: decs
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/24
+
+services:
+  nats:
+    image: nats
+    container_name: decs-nats
+    networks:
+      - decs
+    ports:
+      - "${HOST_PORT:-4222}:4222"
+#      - "8222:8222"
+#      - "6222:6222"
